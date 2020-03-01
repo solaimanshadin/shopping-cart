@@ -43,9 +43,22 @@ function itemCountHandler(itemCountId, itemPriceId , type){
       document.getElementById(itemPriceId).innerText = itemOriginalPrice;
    }else{
       document.getElementById(itemCountId).value = newItemCount;
-      const decrementedPrice =  itemOriginalPrice * newItemCount;
-      document.getElementById(itemPriceId).innerText = decrementedPrice;
+      const updatedPrice =  itemOriginalPrice * newItemCount;
+      document.getElementById(itemPriceId).innerText = updatedPrice;
+      // DOM Updating to invoice 
+      updateInvoiceData(newItemCount, itemOriginalPrice, updatedPrice);
+      if(itemCountId == "itemCount1" ){
+         document.getElementById("invoice-item-price1").innerText = itemOriginalPrice;
+         document.getElementById("invoice-item-quantity1").innerText = newItemCount;
+         document.getElementById("invoice-item-total1").innerText = updatedPrice;
+      }else if(itemCountId == "itemCount2" ){
+         document.getElementById("invoice-item-price2").innerText = itemOriginalPrice;
+         document.getElementById("invoice-item-quantity2").innerText = newItemCount;
+         document.getElementById("invoice-item-total2").innerText = updatedPrice;
+      }
+
   }
+  
   // Updating New Total and Subtotal
   updateTotal();
 }
@@ -60,6 +73,10 @@ function updateTotal(){
    const tax = getSubTotal * 5 / 100 ;
    document.getElementById('tax').innerText =  tax;
    document.getElementById('total').innerText = getSubTotal + tax;
+   document.getElementById("invoice-subtotal").innerText = getSubTotal;
+   document.getElementById("invoice-tax").innerText = tax;
+   document.getElementById("invoice-total").innerText = getSubTotal + tax;
+
    // Remove Checkout Button When Total amount is 0
    if(getSubTotal < 1){
       checkOutBtn.style.display ="none";
@@ -70,13 +87,37 @@ function updateTotal(){
 function RemoveItemFromCart(itemId, ItemPriceId){
    document.getElementById(itemId).style.display= "none";
    document.getElementById(ItemPriceId).innerText = 0;
+   //Updating on Invoice
+   if(itemId == "item1" ){
+      document.getElementById("invoice-item1").style.display= "none";
+   }else if(itemId == "item2" ){
+      document.getElementById("invoice-item2").style.display= "none";
+   }
    updateTotal();
 }
 
 // Checkout 
 const checkOutBtn = document.getElementById('checkoutbtn');
 checkOutBtn.addEventListener("click", function(){
-   document.getElementById('itemswrapper').innerHTML = '<img class="w-100" src="https://ema-john.firebaseapp.com/static/media/giphy.e800c846.gif">';
+   document.getElementById("deliverydetails").classList.remove("d-none");
+   document.getElementById("shoppingcart").classList.add("d-none");
 })
+// Delivery Details Submit 
+const deliveryDetailsForm = document.getElementById('deliveryDetailsForm');
+deliveryDetailsForm.addEventListener("submit", function(e){
+   e.preventDefault();
+   // Printing Invoice Customer Details 
+   document.getElementById("showCustomerName").innerText = deliveryDetailsForm.customerName.value;
+   document.getElementById("showCustomerPhone").innerText = deliveryDetailsForm.customerPhone.value;
+   document.getElementById("showCustomerEmail").innerText = deliveryDetailsForm.customerEmail.value;
+   document.getElementById("showCustomerAddress").innerText = deliveryDetailsForm.customerAddress.value;
+
+   //Hiding and Showing Elements
+   document.getElementById("shoppingcart").classList.add("d-none");
+   document.getElementById("deliverydetails").classList.add("d-none");
+   document.getElementById("invoice").classList.remove("d-none");
+})
+
 // Setting Total and Subtotal on first load
 updateTotal();
+//Customer Details Form 
