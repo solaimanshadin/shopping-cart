@@ -46,7 +46,6 @@ function itemCountHandler(itemCountId, itemPriceId , type){
       const updatedPrice =  itemOriginalPrice * newItemCount;
       document.getElementById(itemPriceId).innerText = updatedPrice;
       // DOM Updating to invoice 
-      updateInvoiceData(newItemCount, itemOriginalPrice, updatedPrice);
       if(itemCountId == "itemCount1" ){
          document.getElementById("invoice-item-price1").innerText = itemOriginalPrice;
          document.getElementById("invoice-item-quantity1").innerText = newItemCount;
