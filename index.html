@@ -15,8 +15,8 @@
    <section>
       <div class="container">
          <div class="cart">
-            <div class="col-md-12 col-lg-10 mx-auto">
-               <div class="cart-item">
+            <div class="col-md-12 col-lg-10 mx-auto" id="itemswrapper">
+               <div class="cart-item" id="item1">
                   <div class="row">
                      <div class="col-md-7 center-item">
                         <img src="images/product-1.png" alt="">
@@ -25,17 +25,17 @@
 
                      <div class="col-md-5 center-item">
                         <div class="input-group number-spinner">
-                           <button class="btn btn-default"><i class="fas fa-minus"></i></button>
-                           <input type="text" class="form-control text-center" value="1">
-                           <button class="btn btn-default"><i class="fas fa-plus"></i></button>
+                           <button id="decrementItem1" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="itemCount1" type="text" class="form-control text-center" value="1">
+                           <button id="incrementItem1" class="btn btn-default"><i class="fas fa-plus"></i></button>
                         </div>
-                        <h5>$1219</h5>
-                        <img src="images/remove.png" alt="" class="remove-item">
+                        <h5>$<span id="itemPrice1">1219</span></h5>
+                        <img id="removeItem1" src="images/remove.png" alt="" class="remove-item">
                      </div>
                   </div>
                </div>
 
-               <div class="cart-item">
+               <div class="cart-item" id="item2">
                   <div class="row">
                      <div class="col-md-7 center-item mx-auto">
                         <img src="images/product-2.png" alt="">
@@ -43,13 +43,13 @@
                      </div>
                      <div class="col-md-5 center-item">
                         <div class="input-group number-spinner">
-                           <button class="btn btn-default"><i class="fas fa-minus"></i></button>
-                           <input type="text" class="form-control text-center" value="1">
-                           <button class="btn btn-default"><i class="fas fa-plus"></i></button>
+                           <button id="decrementItem2" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="itemCount2" type="text" class="form-control text-center" value="1">
+                           <button id="incrementItem2" class="btn btn-default"><i class="fas fa-plus"></i></button>
 
                         </div>
-                        <h5>$59</h5>
-                        <img src="images/remove.png" alt="" class="remove-item">
+                        <h5>$<span id="itemPrice2">59</span></h5>
+                        <img id="removeItem2" src="images/remove.png" alt="" class="remove-item">
                      </div>
                   </div>
                </div>
@@ -64,19 +64,126 @@
                      </div>
 
                      <div class="col-md-4 status">
-                        <h5>$1,278</h5>
-                        <h5>$0</h5>
-                        <h5>$1,278</h5>
+                        <h5>$<span id="subtotal">1278</span></h5>
+                        <h5>$<span id="tax">0</span></h5>
+                        <h5>$<span id="total">1278</span></h5>
                      </div>
                   </div>
                </div>
                <div class="col-md-12 pt-4 pb-4">
-                  <button type="button" class="btn btn-success check-out">Check Out</button>
+                  <button id="checkoutbtn" type="button" class="btn btn-success check-out">Check Out</button>
                </div>
             </div>
          </div>
       </div>
    </section>
+   <script>
+     
+      //Item 1 Increment
+      const incrementItemBtn1 = document.getElementById("incrementItem1");
+      incrementItemBtn1.addEventListener("click", function(){
+         itemIncrementor("itemCount1" , "itemPrice1");
+      });
+      //Item 2 Increment
+      const incrementItemBtn2 = document.getElementById("incrementItem2");
+      incrementItemBtn2.addEventListener("click", function(){
+         itemIncrementor("itemCount2" , "itemPrice2");
+      });
+      // Item 1 Decrement
+      const decrementItemBtn1 = document.getElementById("decrementItem1");
+      decrementItemBtn1.addEventListener("click", function(){
+         itemDecrementor( "itemCount1" , "itemPrice1");
+      })
+      // Item 2 Decrement
+      const decrementItemBtn2 = document.getElementById("decrementItem2");
+      decrementItemBtn2.addEventListener("click", function(){
+         itemDecrementor( "itemCount2" , "itemPrice2")
+      })
+      // Item 1 Delete
+      const itemDeleteBtn1 = document.getElementById("removeItem1");
+      itemDeleteBtn1.addEventListener("click", function(){
+         RemoveItemFromCart("item1", "itemPrice1")
+      })
+      // Item 2 Delete
+      const itemDeleteBtn2 = document.getElementById("removeItem2");
+      itemDeleteBtn2.addEventListener("click", function(){
+         RemoveItemFromCart("item2", "itemPrice2")
+      })
+
+      //Checkout 
+      const checkOutBtn = document.getElementById('checkoutbtn')
+      var itemsWrapper = document.getElementById('itemswrapper');
+      checkOutBtn.addEventListener("click", function(){
+         itemsWrapper.innerHTML = '<img class="w-100" src="https://ema-john.firebaseapp.com/static/media/giphy.e800c846.gif">';
+      })
+   
+
+      function itemIncrementor(itemCountId, itemPriceId ){
+         const itemCount = document.getElementById(itemCountId).value;
+         const newItemCount = parseFloat(itemCount) + 1;
+
+         document.getElementById(itemCountId).value = newItemCount;
+
+         const itemPrice = document.getElementById(itemPriceId).innerText;
+         const itemPriceAmount = parseFloat(itemPrice);
+
+         //Containing Original Product price Every time even after changing on dom
+         const itemOriginalPrice = itemPriceAmount / itemCount;
+
+         const incrementedPrice =  itemOriginalPrice * newItemCount;
+         document.getElementById(itemPriceId).innerText = incrementedPrice;
+         updateTotal();
+
+      }
+
+      function itemDecrementor(itemCountId, itemPriceId ){
+         const itemCount = document.getElementById(itemCountId).value;
+         const newItemCount = parseFloat(itemCount) - 1;
+
+         //Hiding Product on 0 
+         if(newItemCount <= 1){
+            document.getElementById(itemCountId).value= 1;
+         }else{
+
+         document.getElementById(itemCountId).value = newItemCount;
+
+          const itemPrice = document.getElementById(itemPriceId).textContent;
+         var itemPriceAmount = parseFloat(itemPrice);
+
+         //Containing Original Product price Every time even after changing on dom
+         const itemOriginalPrice = itemPriceAmount / itemCount;
+
+         const decrementedPrice =  itemOriginalPrice * newItemCount;
+            document.getElementById(itemPriceId).innerText = decrementedPrice;
+            updateTotal();
+         }
+
+      }
+
+      function RemoveItemFromCart(itemId, ItemPriceId){
+         document.getElementById(itemId).style.display= "none";
+         document.getElementById(ItemPriceId).innerText = 0;
+         updateTotal();
+      }
+
+      function updateTotal(){
+         const priceOfItem1 = document.getElementById("itemPrice1").innerText;
+         const priceOfItem2 = document.getElementById("itemPrice2").innerText;
+         const getSubTotal = parseFloat(priceOfItem1) + parseFloat(priceOfItem2);
+         document.getElementById('subtotal').innerText = getSubTotal;
+         // Adding 5% tax with price Amount
+         const tax = getSubTotal * 5 / 100 ;
+         document.getElementById('tax').innerText =  tax;
+         document.getElementById('total').innerText = getSubTotal + tax;
+
+         if(getSubTotal < 1){
+            checkOutBtn.style.display ="none";
+         }
+
+      }
+      
+
+   </script>
 </body>
 
 </html>
