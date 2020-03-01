@@ -22,54 +22,35 @@ decrementItemBtn2.addEventListener("click", function(){
 const itemDeleteBtn1 = document.getElementById("removeItem1");
 itemDeleteBtn1.addEventListener("click", function(){
    RemoveItemFromCart("item1", "itemPrice1")
-})
+}) 
 // Item 2 Delete
 const itemDeleteBtn2 = document.getElementById("removeItem2");
 itemDeleteBtn2.addEventListener("click", function(){
    RemoveItemFromCart("item2", "itemPrice2")
 })
 
-
-//Checkout 
-const checkOutBtn = document.getElementById('checkoutbtn')
-var itemsWrapper = document.getElementById('itemswrapper');
-checkOutBtn.addEventListener("click", function(){
-   itemsWrapper.innerHTML = '<img class="w-100" src="https://ema-john.firebaseapp.com/static/media/giphy.e800c846.gif">';
-})
-
-
-// Functionality for Item Increment/Decrement
+//  Item Increment/Decrement Functionality
 function itemCountHandler(itemCountId, itemPriceId , type){
    const itemCount = document.getElementById(itemCountId).value;
    const newItemCount = type == "increment" ? parseFloat(itemCount) + 1 : parseFloat(itemCount) - 1 ;
    const itemPrice = document.getElementById(itemPriceId).innerText;
    var itemPriceAmount = parseFloat(itemPrice);
-   
    //Containing Original Product price Every time even after changing on dom
    const itemOriginalPrice = itemPriceAmount / itemCount;
-
-   //Hiding Product on 0 
+   // Item Count Decrement less then 1 Disabling 
    if(newItemCount <= 1){
-      document.getElementById(itemCountId).value= 1;
+      document.getElementById(itemCountId).value = 1;
       document.getElementById(itemPriceId).innerText = itemOriginalPrice;
    }else{
-
       document.getElementById(itemCountId).value = newItemCount;
-
       const decrementedPrice =  itemOriginalPrice * newItemCount;
-    document.getElementById(itemPriceId).innerText = decrementedPrice;
-    updateTotal();
+      document.getElementById(itemPriceId).innerText = decrementedPrice;
   }
-
+  // Updating New Total and Subtotal
+  updateTotal();
 }
 
-// Functionality for Item Remove
-function RemoveItemFromCart(itemId, ItemPriceId){
-   document.getElementById(itemId).style.display= "none";
-   document.getElementById(ItemPriceId).innerText = 0;
-   updateTotal();
-}
-
+// Total/Subtotal Calculation and Update to DOM
 function updateTotal(){
    const priceOfItem1 = document.getElementById("itemPrice1").innerText;
    const priceOfItem2 = document.getElementById("itemPrice2").innerText;
@@ -79,12 +60,23 @@ function updateTotal(){
    const tax = getSubTotal * 5 / 100 ;
    document.getElementById('tax').innerText =  tax;
    document.getElementById('total').innerText = getSubTotal + tax;
-
+   // Remove Checkout Button When Total amount is 0
    if(getSubTotal < 1){
       checkOutBtn.style.display ="none";
    }
-
 }
 
-//Setting Total and Subtotal on first load
+// Functionality for Item Remove
+function RemoveItemFromCart(itemId, ItemPriceId){
+   document.getElementById(itemId).style.display= "none";
+   document.getElementById(ItemPriceId).innerText = 0;
+   updateTotal();
+}
+
+// Checkout 
+const checkOutBtn = document.getElementById('checkoutbtn');
+checkOutBtn.addEventListener("click", function(){
+   document.getElementById('itemswrapper').innerHTML = '<img class="w-100" src="https://ema-john.firebaseapp.com/static/media/giphy.e800c846.gif">';
+})
+// Setting Total and Subtotal on first load
 updateTotal();
