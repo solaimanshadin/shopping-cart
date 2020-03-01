@@ -29,6 +29,7 @@ itemDeleteBtn2.addEventListener("click", function(){
    RemoveItemFromCart("item2", "itemPrice2")
 })
 
+
 //Checkout 
 const checkOutBtn = document.getElementById('checkoutbtn')
 var itemsWrapper = document.getElementById('itemswrapper');
@@ -36,7 +37,7 @@ checkOutBtn.addEventListener("click", function(){
    itemsWrapper.innerHTML = '<img class="w-100" src="https://ema-john.firebaseapp.com/static/media/giphy.e800c846.gif">';
 })
 
-
+// Functionality for Item Increment
 function itemIncrementor(itemCountId, itemPriceId ){
    const itemCount = document.getElementById(itemCountId).value;
    const newItemCount = parseFloat(itemCount) + 1;
@@ -55,6 +56,7 @@ function itemIncrementor(itemCountId, itemPriceId ){
 
 }
 
+// Functionality for Item Decrement
 function itemDecrementor(itemCountId, itemPriceId ){
    const itemCount = document.getElementById(itemCountId).value;
    const newItemCount = parseFloat(itemCount) - 1;
@@ -79,6 +81,7 @@ function itemDecrementor(itemCountId, itemPriceId ){
 
 }
 
+// Functionality for Item Remove
 function RemoveItemFromCart(itemId, ItemPriceId){
    document.getElementById(itemId).style.display= "none";
    document.getElementById(ItemPriceId).innerText = 0;
@@ -100,3 +103,6 @@ function updateTotal(){
    }
 
 }
+
+//Setting Total and Subtotal on first load
+updateTotal();
